@@ -1,0 +1,631 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>SCASD Environmental Club</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
+  <style>
+    :root {
+      --forest:    #1a3a2a;
+      --moss:      #2d6a4f;
+      --fern:      #52b788;
+      --mint:      #95d5b2;
+      --cream:     #f4f1e8;
+      --bark:      #3d2b1f;
+      --gold:      #c9a84c;
+      --light:     #e8f5ee;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: var(--cream);
+      color: var(--forest);
+      overflow-x: hidden;
+    }
+
+    /* ── NAV ── */
+    nav {
+      position: fixed; top: 0; width: 100%; z-index: 100;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 1rem 3rem;
+      background: rgba(26,58,42,0.92);
+      backdrop-filter: blur(8px);
+      border-bottom: 1px solid rgba(149,213,178,0.15);
+    }
+    .nav-logo {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.3rem; color: var(--mint); letter-spacing: .04em;
+    }
+    .nav-logo span { color: var(--gold); font-style: italic; }
+    .nav-links { display: flex; gap: 2rem; list-style: none; }
+    .nav-links a {
+      color: var(--mint); text-decoration: none; font-size: .9rem;
+      font-weight: 500; letter-spacing: .06em; text-transform: uppercase;
+      opacity: .75; transition: opacity .2s;
+    }
+    .nav-links a:hover { opacity: 1; }
+    .nav-links a { position: relative; }
+    .nav-links a::after {
+      content: ''; position: absolute; bottom: -3px; left: 0; width: 0; height: 1.5px;
+      background: var(--fern); transition: width .3s ease;
+    }
+    .nav-links a:hover::after { width: 100%; }
+
+    /* ── HERO ── */
+    #hero {
+      min-height: 100vh;
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      text-align: center;
+      background: var(--forest);
+      position: relative; overflow: hidden;
+      padding: 6rem 2rem 4rem;
+    }
+
+    /* layered leaf silhouettes via pseudo */
+    #hero::before, #hero::after {
+      content: '';
+      position: absolute; inset: 0;
+      pointer-events: none;
+    }
+    #hero::before {
+      background:
+        radial-gradient(ellipse 60% 70% at 15% 110%, rgba(82,183,136,.18) 0%, transparent 70%),
+        radial-gradient(ellipse 50% 60% at 85% 110%, rgba(45,106,79,.25) 0%, transparent 70%),
+        radial-gradient(ellipse 80% 40% at 50% 0%, rgba(149,213,178,.07) 0%, transparent 60%);
+    }
+    #hero::after {
+      background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='600' height='600' opacity='.04'%3E%3Ccircle cx='300' cy='300' r='280' fill='none' stroke='%2395d5b2' stroke-width='1'/%3E%3Ccircle cx='300' cy='300' r='200' fill='none' stroke='%2395d5b2' stroke-width='1'/%3E%3Ccircle cx='300' cy='300' r='120' fill='none' stroke='%2395d5b2' stroke-width='1'/%3E%3C/svg%3E") center/600px repeat;
+      animation: rotateRings 60s linear infinite;
+    }
+    @keyframes rotateRings {
+      from { transform: rotate(0deg); }
+      to   { transform: rotate(360deg); }
+    }
+    #particles-canvas {
+      position: absolute; inset: 0; pointer-events: none; z-index: 0;
+    }
+
+    .hero-badge {
+      display: inline-block;
+      font-size: .75rem; font-weight: 500; letter-spacing: .15em; text-transform: uppercase;
+      color: var(--gold); border: 1px solid rgba(201,168,76,.4);
+      padding: .35rem .9rem; border-radius: 2rem; margin-bottom: 1.5rem;
+      position: relative; z-index: 1;
+      animation: fadeUp .8s ease both;
+    }
+    h1 {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(3rem, 8vw, 6.5rem);
+      color: var(--cream); line-height: 1.05;
+      position: relative; z-index: 1;
+      animation: fadeUp .8s .15s ease both;
+    }
+    h1 em { color: var(--fern); font-style: italic; }
+    .hero-sub {
+      max-width: 520px; margin: 1.5rem auto 2.5rem;
+      color: rgba(232,245,238,.65); font-size: 1.05rem; line-height: 1.7;
+      position: relative; z-index: 1;
+      animation: fadeUp .8s .3s ease both;
+    }
+    .hero-cta {
+      display: inline-flex; gap: 1rem; flex-wrap: wrap; justify-content: center;
+      position: relative; z-index: 1;
+      animation: fadeUp .8s .45s ease both;
+    }
+    .btn {
+      padding: .75rem 1.75rem; border-radius: .35rem; font-size: .9rem;
+      font-weight: 500; cursor: pointer; text-decoration: none;
+      transition: transform .2s, box-shadow .2s;
+    }
+    .btn-primary {
+      background: var(--fern); color: var(--forest); border: none;
+    }
+    .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(82,183,136,.35); }
+    .btn-outline {
+      background: transparent; color: var(--mint); border: 1px solid rgba(149,213,178,.45);
+    }
+    .btn-outline:hover { background: rgba(149,213,178,.08); transform: translateY(-2px); }
+
+    .scroll-hint {
+      position: absolute; bottom: 2rem; left: 50%; transform: translateX(-50%);
+      color: rgba(149,213,178,.4); font-size: .75rem; letter-spacing: .1em;
+      text-transform: uppercase; z-index: 1;
+      animation: pulse 2.5s ease infinite;
+    }
+
+    /* ── SECTIONS SHARED ── */
+    section { padding: 6rem 2rem; }
+    .container { max-width: 1100px; margin: 0 auto; }
+    .section-label {
+      font-size: .75rem; font-weight: 500; letter-spacing: .18em; text-transform: uppercase;
+      color: var(--fern); margin-bottom: .75rem;
+    }
+    .section-title {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(2rem, 4vw, 3rem);
+      color: var(--forest); line-height: 1.15; margin-bottom: 1rem;
+    }
+    .section-body {
+      max-width: 600px; color: #4a6556; line-height: 1.75; font-size: 1rem;
+    }
+
+    /* ── ABOUT ── */
+    #about { background: var(--light); }
+    .about-grid {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; align-items: center;
+    }
+    .about-img {
+      aspect-ratio: 4/3;
+      background: linear-gradient(135deg, var(--moss), var(--forest));
+      border-radius: .5rem; position: relative; overflow: hidden;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .about-img svg { opacity: .2; }
+    .about-placeholder {
+      position: absolute; inset: 0;
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      gap: .5rem; color: rgba(149,213,178,.6); font-size: .85rem; text-align: center;
+      padding: 1.5rem;
+    }
+    .about-placeholder .icon { font-size: 2.5rem; }
+
+    .stat-row { display: flex; gap: 2.5rem; margin-top: 2.5rem; flex-wrap: wrap; }
+    .stat { border-left: 3px solid var(--fern); padding-left: 1rem; }
+    .stat-num {
+      font-family: 'Playfair Display', serif; font-size: 2rem; color: var(--moss);
+    }
+    .stat-lbl { font-size: .8rem; color: #7a9e8a; text-transform: uppercase; letter-spacing: .1em; }
+
+    /* ── INITIATIVES ── */
+    #initiatives { background: var(--cream); }
+    .init-header { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 3rem; flex-wrap: wrap; gap: 1rem; }
+    .cards-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem; }
+    .card {
+      background: #fff; border-radius: .5rem;
+      border: 1px solid rgba(82,183,136,.15);
+      padding: 2rem; transition: transform .2s, box-shadow .2s;
+      position: relative; overflow: hidden;
+    }
+    .card::before {
+      content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px;
+      background: linear-gradient(90deg, var(--moss), var(--fern));
+    }
+    .card:hover { transform: translateY(-4px); box-shadow: 0 12px 32px rgba(45,106,79,.1); }
+    .card::after {
+      content: ''; position: absolute; inset: 0;
+      background: linear-gradient(135deg, rgba(255,255,255,0) 40%, rgba(149,213,178,.08) 100%);
+      opacity: 0; transition: opacity .3s;
+    }
+    .card:hover::after { opacity: 1; }
+    .card-icon {
+      width: 3rem; height: 3rem; border-radius: .4rem;
+      background: var(--light);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.4rem; margin-bottom: 1.2rem;
+      transition: transform .3s cubic-bezier(.34,1.56,.64,1);
+    }
+    .card:hover .card-icon { transform: scale(1.2) rotate(-5deg); }
+    .card h3 { font-family: 'Playfair Display', serif; font-size: 1.25rem; margin-bottom: .5rem; }
+    .card p { color: #5a7a6a; font-size: .9rem; line-height: 1.65; }
+    .card-tag {
+      display: inline-block; margin-top: 1rem;
+      font-size: .72rem; font-weight: 500; letter-spacing: .1em; text-transform: uppercase;
+      color: var(--fern); background: var(--light); padding: .25rem .7rem; border-radius: 2rem;
+    }
+
+    /* ── EVENTS ── */
+    #events { background: var(--forest); color: var(--cream); }
+    #events .section-title { color: var(--cream); }
+    #events .section-body { color: rgba(232,245,238,.6); }
+    .events-list { margin-top: 3rem; display: flex; flex-direction: column; gap: 1rem; }
+    .event-item {
+      display: grid; grid-template-columns: 5rem 1fr auto;
+      align-items: center; gap: 1.5rem;
+      background: rgba(255,255,255,.05); border: 1px solid rgba(149,213,178,.1);
+      border-radius: .4rem; padding: 1.25rem 1.5rem;
+      transition: background .2s, transform .25s ease, border-color .25s;
+    }
+    .event-item:hover { background: rgba(255,255,255,.08); transform: translateX(6px); border-color: rgba(82,183,136,.3); }
+    .event-date {
+      text-align: center;
+      font-family: 'Playfair Display', serif;
+    }
+    .event-date .day { font-size: 2rem; color: var(--fern); line-height: 1; }
+    .event-date .mon { font-size: .75rem; text-transform: uppercase; letter-spacing: .1em; color: var(--mint); opacity: .7; }
+    .event-info h4 { font-size: 1rem; color: var(--cream); margin-bottom: .25rem; }
+    .event-info p { font-size: .85rem; color: rgba(149,213,178,.6); }
+    .event-pill {
+      font-size: .72rem; text-transform: uppercase; letter-spacing: .1em;
+      padding: .3rem .8rem; border-radius: 2rem;
+      border: 1px solid rgba(149,213,178,.25); color: var(--mint);
+      white-space: nowrap;
+    }
+
+    /* ── JOIN ── */
+    #join { background: var(--light); }
+    .join-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; align-items: center; }
+    .social-panel { display: flex; flex-direction: column; gap: 1rem; }
+    .social-card {
+      display: flex; align-items: center; gap: 1.25rem;
+      background: #fff; border-radius: .5rem; padding: 1.25rem 1.5rem;
+      border: 1px solid rgba(82,183,136,.15);
+      text-decoration: none; color: var(--forest);
+      transition: transform .25s ease, box-shadow .25s, border-color .25s;
+      position: relative; overflow: hidden;
+    }
+    .social-card::before {
+      content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 3px;
+      background: linear-gradient(180deg, var(--moss), var(--fern));
+      transform: scaleY(0); transform-origin: bottom;
+      transition: transform .3s ease;
+    }
+    .social-card:hover { transform: translateY(-3px); box-shadow: 0 10px 28px rgba(45,106,79,.12); border-color: rgba(82,183,136,.35); }
+    .social-card:hover::before { transform: scaleY(1); }
+    .social-card-icon {
+      width: 3rem; height: 3rem; border-radius: .4rem;
+      background: var(--light); display: flex; align-items: center; justify-content: center;
+      font-size: 1.5rem; flex-shrink: 0;
+      transition: transform .3s cubic-bezier(.34,1.56,.64,1);
+    }
+    .social-card:hover .social-card-icon { transform: scale(1.15) rotate(-5deg); }
+    .social-card-text strong { display: block; font-size: .95rem; margin-bottom: .15rem; }
+    .social-card-text span { font-size: .82rem; color: #7a9e8a; }
+
+    /* ── FOOTER ── */
+    footer {
+      background: var(--bark); color: rgba(232,245,238,.5);
+      padding: 3rem 2rem; text-align: center;
+    }
+    footer .footer-logo {
+      font-family: 'Playfair Display', serif; font-size: 1.4rem;
+      color: var(--mint); margin-bottom: .5rem;
+    }
+    footer p { font-size: .85rem; }
+    .footer-links { display: flex; justify-content: center; gap: 2rem; margin: 1.5rem 0; flex-wrap: wrap; }
+    .footer-links a { color: rgba(149,213,178,.5); text-decoration: none; font-size: .85rem; transition: color .2s, transform .2s; display: inline-block; }
+    .footer-links a:hover { color: var(--mint); transform: translateY(-2px); }
+
+    /* ── SCROLL REVEAL ── */
+    .reveal {
+      opacity: 0; transform: translateY(30px);
+      transition: opacity .65s ease, transform .65s ease;
+    }
+    .reveal.visible { opacity: 1; transform: translateY(0); }
+    .reveal-left {
+      opacity: 0; transform: translateX(-30px);
+      transition: opacity .65s ease, transform .65s ease;
+    }
+    .reveal-left.visible { opacity: 1; transform: translateX(0); }
+    .reveal-right {
+      opacity: 0; transform: translateX(30px);
+      transition: opacity .65s ease, transform .65s ease;
+    }
+    .reveal-right.visible { opacity: 1; transform: translateX(0); }
+
+    /* stagger children */
+    .stagger-children > * {
+      opacity: 0; transform: translateY(24px);
+      transition: opacity .5s ease, transform .5s ease;
+    }
+    .stagger-children.visible > *:nth-child(1) { opacity:1; transform:none; transition-delay: 0s; }
+    .stagger-children.visible > *:nth-child(2) { opacity:1; transform:none; transition-delay:.1s; }
+    .stagger-children.visible > *:nth-child(3) { opacity:1; transform:none; transition-delay:.2s; }
+    .stagger-children.visible > *:nth-child(4) { opacity:1; transform:none; transition-delay:.3s; }
+    .stagger-children.visible > *:nth-child(5) { opacity:1; transform:none; transition-delay:.4s; }
+    .stagger-children.visible > *:nth-child(6) { opacity:1; transform:none; transition-delay:.5s; }
+
+    /* ── ANIMATIONS ── */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(22px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes pulse {
+      0%,100% { opacity: .4; } 50% { opacity: .9; }
+    }
+    @keyframes leafFloat {
+      0%,100% { transform: translateY(0) rotate(0deg); }
+      33%      { transform: translateY(-18px) rotate(8deg); }
+      66%      { transform: translateY(-8px) rotate(-5deg); }
+    }
+    @keyframes glowPulse {
+      0%,100% { box-shadow: 0 0 0 0 rgba(82,183,136,0); }
+      50%      { box-shadow: 0 0 0 8px rgba(82,183,136,.12); }
+    }
+    .stat { animation: none; }
+    .stat-num { transition: color .3s; }
+    .stat:hover .stat-num { color: var(--fern); }
+    .stat { cursor: default; border-left: 3px solid var(--fern); padding-left: 1rem; transition: border-color .3s; }
+    .stat:hover { border-color: var(--mint); }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 768px) {
+      nav { padding: 1rem 1.5rem; }
+      .nav-links { display: none; }
+      .about-grid, .join-grid { grid-template-columns: 1fr; }
+      .event-item { grid-template-columns: 4rem 1fr; }
+      .event-pill { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-logo">Enviormental<span>Club</span></div>
+  <ul class="nav-links">
+    <li><a href="#about">About</a></li>
+    <li><a href="#initiatives">Initiatives</a></li>
+    <li><a href="#events">Events</a></li>
+    <li><a href="#join">Join Us</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<section id="hero">
+  <canvas id="particles-canvas"></canvas>
+  <div class="hero-badge">🌿 SCASD Environmental Club</div>
+  <h1>Rooted in<br><em>Purpose.</em><br>Growing Change.</h1>
+  <p class="hero-sub">
+    We are students passionate about protecting our planet — one action, one initiative, one voice at a time. Join us and make your mark.
+  </p>
+  <div class="hero-cta">
+    <a href="#join" class="btn btn-primary">Become a Member</a>
+    <a href="#initiatives" class="btn btn-outline">Our Initiatives</a>
+  </div>
+  <div class="scroll-hint">↓ scroll to explore</div>
+</section>
+
+<!-- ABOUT -->
+<section id="about">
+  <div class="container">
+    <div class="about-grid">
+      <div class="reveal-left">
+        <p class="section-label">Who We Are</p>
+        <h2 class="section-title">A Club That Cares About Our Planet</h2>
+        <p class="section-body">
+          {[CLUB BACKSTORY HERE!]}
+        </p>
+        <p class="section-body" style="margin-top:1rem;">
+          [CLUB GOALS]
+        </p>
+        <div class="stat-row">
+          <div class="stat">
+            <div class="stat-num">61</div>
+            <div class="stat-lbl">Members</div>
+          </div>
+          <div class="stat">
+            <div class="stat-num">10+</div>
+            <div class="stat-lbl">Projects</div>
+          </div>
+          <div class="stat">
+            <div class="stat-num"> 4</div>
+            <div class="stat-lbl">Years Active</div>
+          </div>
+        </div>
+      </div>
+      <div class="about-img reveal-right">
+        <div class="about-placeholder">
+          <span class="icon">🌳</span>
+          <strong style="color:rgba(149,213,178,.8)">[CLUB PHOTO]</strong>
+          <span>Our club</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- INITIATIVES -->
+<section id="initiatives">
+  <div class="container">
+    <div class="init-header">
+      <div>
+        <p class="section-label">What We Do</p>
+        <h2 class="section-title">Our Key Initiatives</h2>
+      </div>
+      <p class="section-body" style="max-width:340px; font-size:.9rem;">
+        here's how we're making a difference.
+      </p>
+    </div>
+    <div class="cards-grid stagger-children">
+      <div class="card">
+        <div class="card-icon">♻️</div>
+        <h3>[Project #1]</h3>
+        <p>[Describe this project]</p>
+        <span class="card-tag">Ongoing</span>
+      </div>
+      <div class="card">
+        <div class="card-icon">🌱</div>
+        <h3>[Project #2]</h3>
+        <p>[Describe this project]</p>
+        <span class="card-tag">Seasonal</span>
+      </div>
+      <div class="card">
+        <div class="card-icon">💧</div>
+        <h3>[Project #3]</h3>
+        <p>[Describe this project]</p>
+        <span class="card-tag">Awareness</span>
+    </div>
+  </div>
+</section>
+
+<!-- EVENTS -->
+<section id="events">
+  <div class="container">
+    <p class="section-label" style="color:var(--fern)">Mark Your Calendar</p>
+    <h2 class="section-title">Upcoming Events</h2>
+    <p class="section-body">[add events and meeting days]</p>
+    <div class="events-list stagger-children">
+      <div class="event-item">
+        <div class="event-date">
+          <div class="day">[DD]</div>
+          <div class="mon">[Month]</div>
+        </div>
+        <div class="event-info">
+          <h4>[Event Name]</h4>
+          <p>[Location] &nbsp;·&nbsp; [Time]</p>
+        </div>
+        <div class="event-pill">Volunteer</div>
+      </div>
+      <div class="event-item">
+        <div class="event-date">
+          <div class="day">[DD]</div>
+          <div class="mon">[Month]</div>
+        </div>
+        <div class="event-info">
+          <h4>[Event Name]</h4>
+          <p>[Location] &nbsp;·&nbsp; [Time]</p>
+        </div>
+        <div class="event-pill">Speaker</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- JOIN -->
+<section id="join">
+  <div class="container">
+    <div class="join-grid">
+      <div>
+        <p class="section-label">Get Involved</p>
+        <h2 class="section-title">Ready to Make a Difference?</h2>
+        <p class="section-body">
+          [inviting message]
+        </p>
+        <p class="section-body" style="margin-top:1rem;">
+          <strong>Meeting time:</strong> [Day & Time]<br>
+          <strong>Location:</strong> [Room / Building]<br>
+          <strong>Advisor:</strong> [Teacher/Advisor Name]<br>
+          <strong>Contact:</strong> [Email Address]
+        </p>
+      </div>
+      <div class="social-panel stagger-children">
+        <a href="https://www.instagram.com/[yourhandle]" target="_blank" rel="noopener" class="social-card">
+          <div class="social-card-icon">📸</div>
+          <div class="social-card-text">
+            <strong>Follow us on Instagram</strong>
+            <span>@enviroclubscahs — photos, updates & events</span>
+          </div>
+        </a>
+        <a href="mailto:[clubemail@school.edu]" class="social-card">
+          <div class="social-card-icon">✉️</div>
+          <div class="social-card-text">
+            <strong>Email the Club at</strong>
+            <span>kmd38@scasd.org</span>
+          </div>
+        </a>
+        <a href="#events" class="social-card">
+          <div class="social-card-icon">📅</div>
+          <div class="social-card-text">
+            <strong>Come to a Meeting</strong>
+            <span>[Day & Time] · [Room / Building]</span>
+          </div>
+        </a>
+        <a href="#" class="social-card">
+          <div class="social-card-icon">🧑‍🏫</div>
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-logo">Enviormental club </div>
+  <p>SCASD Environmental Club</p>
+  <div class="footer-links">
+    <a href="#about">About</a>
+    <a href="#initiatives">Initiatives</a>
+    <a href="#events">Events</a>
+    <a href="#join">Join Us</a>
+    <a href="https://www.instagram.com/enviroclubscahs?utm_source=ig_web_button_share_sheet&igsh=ZDNlZDc0MzIxNw==" target="_blank" rel="noopener">Instagram</a>
+    <a href="#">Contact</a>
+  </div>
+  <p style="font-size:.8rem; margin-top:1rem;">🌿 Every action counts. Start small, grow big.</p>
+</footer>
+
+</body>
+<script>
+/* ── PARTICLES ── */
+(function(){
+  const canvas = document.getElementById('particles-canvas');
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+  let W, H, particles = [];
+
+  function resize(){ W = canvas.width = canvas.offsetWidth; H = canvas.height = canvas.offsetHeight; }
+  window.addEventListener('resize', resize); resize();
+
+  const COLORS = ['rgba(82,183,136,', 'rgba(149,213,178,', 'rgba(45,106,79,'];
+  class Particle {
+    constructor(){
+      this.x = Math.random()*W; this.y = Math.random()*H;
+      this.r = Math.random()*2+.5;
+      this.vx = (Math.random()-.5)*.3; this.vy = -(Math.random()*.4+.1);
+      this.alpha = Math.random()*.4+.1;
+      this.color = COLORS[Math.floor(Math.random()*COLORS.length)];
+    }
+    update(){
+      this.x += this.vx; this.y += this.vy;
+      if(this.y < -5){ this.y = H+5; this.x = Math.random()*W; }
+    }
+    draw(){
+      ctx.beginPath();
+      ctx.arc(this.x, this.y, this.r, 0, Math.PI*2);
+      ctx.fillStyle = this.color + this.alpha + ')';
+      ctx.fill();
+    }
+  }
+
+  for(let i=0;i<60;i++) particles.push(new Particle());
+
+  function loop(){
+    ctx.clearRect(0,0,W,H);
+    particles.forEach(p=>{ p.update(); p.draw(); });
+    requestAnimationFrame(loop);
+  }
+  loop();
+})();
+
+/* ── SCROLL REVEAL ── */
+(function(){
+  const selectors = '.reveal, .reveal-left, .reveal-right, .stagger-children';
+  const els = document.querySelectorAll(selectors);
+  const observer = new IntersectionObserver(entries=>{
+    entries.forEach(e=>{
+      if(e.isIntersecting){ e.target.classList.add('visible'); observer.unobserve(e.target); }
+    });
+  }, { threshold: 0.12 });
+  els.forEach(el => observer.observe(el));
+})();
+
+/* ── STAT NUMBER COUNT-UP ── */
+(function(){
+  const stats = document.querySelectorAll('.stat-num');
+  const observer = new IntersectionObserver(entries=>{
+    entries.forEach(e=>{
+      if(!e.isIntersecting) return;
+      const el = e.target;
+      const raw = el.textContent.trim();
+      const num = parseInt(raw.replace(/\D/g,''));
+      if(isNaN(num)){ observer.unobserve(el); return; }
+      let start = 0; const dur = 1200;
+      const t0 = performance.now();
+      function tick(now){
+        const p = Math.min((now-t0)/dur, 1);
+        const ease = 1 - Math.pow(1-p, 3);
+        el.textContent = Math.round(ease * num);
+        if(p < 1) requestAnimationFrame(tick); else el.textContent = raw;
+      }
+      requestAnimationFrame(tick);
+      observer.unobserve(el);
+    });
+  }, { threshold: 0.5 });
+  stats.forEach(el => observer.observe(el));
+})();
+</script>
+</html>
