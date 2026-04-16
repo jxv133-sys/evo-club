@@ -5,7 +5,7 @@ services:
     image: nginx:alpine
     container_name: eco-club-server
     ports:
-      - "1454:80"
+      - "80:80"
     volumes:
       - ./eco_club.html:/usr/share/nginx/html/index.html:ro
     restart: unless-stopped
