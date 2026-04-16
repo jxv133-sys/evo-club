@@ -1,0 +1,7 @@
+services:
+  groundsite:
+    build: .
+    container_name: evo-site
+    ports:
+      - "1454:1454"
+    restart: unless-stopped
