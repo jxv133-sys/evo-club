@@ -1,7 +1,11 @@
+version: "3.8"
+
 services:
-  groundsite:
-    build: .
-    container_name: evo-site
+  web:
+    image: nginx:alpine
+    container_name: eco-club-server
     ports:
-      - "1454:1454"
+      - "1454:80"
+    volumes:
+      - ./eco_club.html:/usr/share/nginx/html/index.html:ro
     restart: unless-stopped
